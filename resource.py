@@ -3,9 +3,16 @@ import json
 
 class DefaultResource(object):
 
-    def __init__(self,req,resp):
+    def __init__(self,req,resp,user_objects=None):
+        '''Initializes a Resource.
+           user_objects is a convienence store of user objects and data,
+           ideally initialized at the time of calling the app.  This allows us
+           to access long-lived DB or Cache sessions, or other long lived
+           objects and data.'''
+           
         self.req = req
         self.resp = resp
+        self.user_objects = user_objects
 
     def __call__(self):
         if self.req.request_method == 'POST':

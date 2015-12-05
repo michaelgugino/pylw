@@ -6,6 +6,7 @@ class HelloWorld(resource.DefaultResource):
 
     def on_get(self):
         #cookies = self.resp.get_cookies()
+        print self.user_objects['dbcon']
         signed_cookies = self.resp.get_signed_cookie('testk')
         #unsigned_cookies = self.resp.get_cookie('unsigned_testk') or 'none'
         self.resp.status = '200 OK'
@@ -36,11 +37,16 @@ class RootResource(resource.DefaultResource):
         #self.resp.add_cookie('testk','value1')
         self.resp.add_header('Content-Type','text/html')
 
-
-myapp = app.App()
+myuserobject = {}
+myuserobject['dbcon'] = 'mydbcon'
+myapp = app.App(user_objects=myuserobject)
 myapp.secret_key="my-new-secret-key"
 myapp.router.add_path('/testing/v1/{var1}',HelloWorld)
-myapp.router.add_path('/testing/v1/{var1}',RootResource)
+
+#Routes can be overwritten, so be careful.
+#myapp.router.add_path('/testing/v1/{var1}',HelloNobody)
+
+#You need to manually define a root resource.
 myapp.router.add_path('/',RootResource)
 myapp.router.add_path('/favicon.ico',HelloNobody)
 

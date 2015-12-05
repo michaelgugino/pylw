@@ -87,6 +87,7 @@ class Request(object):
             self.cookies = None
 
     def read_post_body(self):
+        #this is probably unsafe and we should limit how much we read.
         '''Read the body of the POST request'''
         if self.request_method == 'POST':
             stream = self.raw_env['wsgi.input']
@@ -99,9 +100,10 @@ class Request(object):
 
 class App(object):
     '''This class implements a bare minimum WSGI application'''
-    def __init__(self):
+    def __init__(self, secret_key=None, user_objects=None):
         self.router = routing.DefaultRouter()
-        self.secret_key = None
+        self.secret_key = secret_key
+        self.user_objects = user_objects
 
     def __call__(self, env, start_response):
         '''This method is called by the WSGI server.'''
@@ -116,7 +118,7 @@ class App(object):
             resp = Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
 
             controller = self.router.return_path_resource(
-                self.router.parse_path(req.path),req.url_vars)(req,resp)
+                            req.path,req.url_vars)(req,resp,user_objects=self.user_objects)
             controller()
         except Exception as ex:
             code,body = ex.args

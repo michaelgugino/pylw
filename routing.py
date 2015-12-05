@@ -19,11 +19,19 @@ class Node(object):
         return self.name
 
 class DefaultRouter(object):
+    '''This class implements the DefaultRouter.  DefaultRouter is meant to be
+       used directly parse paths into callable resources, and to map requested
+       urls from the client to our callable resources we mapped earlier.'''
 
     def __init__(self):
         self.root_node_dict = {}
 
     def parse_path(self, uri):
+        '''Splits our path into sections using '/' as the separator.
+           If the path = '/', then we map '/'.  Otherwise, we trim off the first
+           item in the list as it would be blank and nondescriptive.
+
+           The list is returned in reverse so we can pop it.'''
         if uri == '/':
             l = [uri]
         else:
@@ -34,6 +42,9 @@ class DefaultRouter(object):
         return l
 
     def add_path(self,uri,resource):
+        '''takes in a path string and callable resource, calls parse_path,
+           and maps that path to our callable resource.'''
+
         current_node = None
         root_node = None
         url = self.parse_path(uri)
@@ -68,16 +79,14 @@ class DefaultRouter(object):
                 current_node = new_node
         current_node.resource = resource
 
-
-    def HTTP404(self):
-        print "not found"
-
-
-    def return_path_resource(self,url,var_dict):
+    def return_path_resource(self,uri,var_dict):
+        '''Takes in a string path, and parses it.  It uses the parsed path to
+           determine what resource to call.  Raises a 404 exception if a mappped
+           resource is not found.'''
         current_node = None
         root_node = None
         #print uri
-        #url = self.parse_path(uri)
+        url = self.parse_path(uri)
         while url:
             a = url.pop()
 

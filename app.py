@@ -68,7 +68,6 @@ class Request(object):
         self.posted_body = None
         self.path = env['PATH_INFO']
         self.url_vars = {}
-        self.path_parsed = self.parse_path(self.path)
         self.read_post_body()
         if 'HTTP_COOKIE' in env:
             self.cookies = env['HTTP_COOKIE']
@@ -83,13 +82,6 @@ class Request(object):
 
     def get_cookies(self):
         return self.cookies
-
-    def parse_path(self, url):
-        l = url.split('/')
-        if l[0] == '':
-            l = l[1:]
-        l.reverse()
-        return l
 
 
 class App(object):
@@ -106,7 +98,8 @@ class App(object):
         req = Request(env)
         resp = Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
 
-        controller = self.router.return_path_resource(req.path,req.url_vars)(req,resp)
+        controller = self.router.return_path_resource(
+            self.router.parse_path(req.path),req.url_vars)(req,resp)
         controller()
 
         start_response(resp.status, resp.get_headers())

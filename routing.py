@@ -4,7 +4,7 @@ class Node(object):
     '''Implements basic class for url nodes.  These nodes contain child nodes,
        variable child nodes, and/or functions.  This allows us to walk through
        the requested URL path and get the most relevant result.'''
-       
+
     def __init__(self,resource=None,name=None,isvar=False):
         self.children = {}
         self.resource = resource
@@ -24,10 +24,13 @@ class DefaultRouter(object):
         self.root_node_dict = {}
 
     def parse_path(self, uri):
-        l = uri.split('/')
-        if l[0] == '':
-            l = l[1:]
-        l.reverse()
+        if uri == '/':
+            l = [uri]
+        else:
+            l = uri.split('/')
+            if l[0] == '':
+                l = l[1:]
+            l.reverse()
         return l
 
     def add_path(self,uri,resource):
@@ -70,11 +73,11 @@ class DefaultRouter(object):
         print "not found"
 
 
-    def return_path_resource(self,uri,var_dict):
+    def return_path_resource(self,url,var_dict):
         current_node = None
         root_node = None
-        print uri
-        url = self.parse_path(uri)
+        #print uri
+        #url = self.parse_path(uri)
         while url:
             a = url.pop()
 

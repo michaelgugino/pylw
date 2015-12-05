@@ -28,10 +28,20 @@ class HelloNobody(resource.DefaultResource):
         #self.resp.add_cookie('testk','value1')
         self.resp.add_header('Content-Type','application/json')
 
+class RootResource(resource.DefaultResource):
+
+    def on_get(self):
+        self.resp.status = '200 OK'
+        self.resp.body = 'this is home'
+        #self.resp.add_cookie('testk','value1')
+        self.resp.add_header('Content-Type','text/html')
+
 
 myapp = app.App()
 myapp.secret_key="my-new-secret-key"
 myapp.router.add_path('/testing/v1/{var1}',HelloWorld)
+myapp.router.add_path('/testing/v1/{var1}',RootResource)
+myapp.router.add_path('/',RootResource)
 myapp.router.add_path('/favicon.ico',HelloNobody)
 
 from wsgiref import simple_server

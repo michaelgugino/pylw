@@ -1,3 +1,6 @@
+'''pylw.app.  Contains Resp,Req,App object definitions.
+   pylw.app.App() is the WSGI callable object.'''
+
 import routing
 import itsdangerous
 import Cookie
@@ -15,15 +18,18 @@ class Response(object):
         self.__cookies = self.parse_http_cookies(http_cookies)
 
     def parse_http_cookies(self, req_cookies):
+        '''Parse http cookies into a SimpleCookie object'''
         C = Cookie.SimpleCookie()
         if req_cookies:
             C.load(req_cookies)
         return C
 
     def create_secret_signer(self,secret_key=None):
+        '''Create our secret signer object'''
         return itsdangerous.Serializer(secret_key)
 
     def get_headers(self):
+        '''Returns headers in a list of tuples that is usable by WSGI'''
         if not self.body:
             self.body = ''
         self.__header_dict['Content-Length'] = str(len(self.body))
@@ -38,31 +44,37 @@ class Response(object):
         return self.__cookies.output()
 
     def get_cookie(self,cookie):
+        '''Return the value a cookie.'''
         try:
             return self.__cookies[cookie].value
         except:
             return None
 
     def get_signed_cookie(self,cookie):
+        '''Return the value of a signed cookie.'''
         try:
             return self.s.loads(self.__cookies[cookie].value)
         except:
             return None
 
     def add_signed_cookie(self,k,v):
+        '''Add a signed cookie'''
         v = self.s.dumps(v)
         self.__cookies[k] = v
 
     def add_cookie(self,k,v):
+        '''Add an unsigned cookie'''
         self.__cookies[k] = v
 
     def add_header(self,k,v):
+        '''Add a response header'''
         self.__header_dict[k] = v
 
 class Request(object):
     '''An object that holds request values'''
 
     def __init__(self,env):
+        '''Initializes the request object.'''
         self.raw_env = env
         self.request_method = env['REQUEST_METHOD']
         self.posted_body = None
@@ -81,6 +93,7 @@ class Request(object):
             self.posted_body = stream.read(int(self.raw_env['CONTENT_LENGTH']))
 
     def get_cookies(self):
+        '''return self.cookies'''
         return self.cookies
 
 
@@ -92,15 +105,26 @@ class App(object):
 
     def __call__(self, env, start_response):
         '''This method is called by the WSGI server.'''
-        if not self.secret_key:
-            print "secret_key not set, exiting"
-            exit()
-        req = Request(env)
-        resp = Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
 
-        controller = self.router.return_path_resource(
-            self.router.parse_path(req.path),req.url_vars)(req,resp)
-        controller()
+        try:
+            if not self.secret_key:
+                print "secret_key not set, exiting"
+                code = '500 Server Error'
+                body = 'secret_key not set, exiting'
+                raise Exception(code, body)
+            req = Request(env)
+            resp = Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
 
+            controller = self.router.return_path_resource(
+                self.router.parse_path(req.path),req.url_vars)(req,resp)
+            controller()
+        except Exception as ex:
+            code,body = ex.args
+            if not code or not body:
+                code = '500 Server Error'
+                body = 'Unhandled App Exception'
+            header_dict = {'Content-Length' : str(len(body))}
+            start_response(code, header_dict.items())
+            return body
         start_response(resp.status, resp.get_headers())
         return resp.body

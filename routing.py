@@ -84,8 +84,9 @@ class DefaultRouter(object):
             if root_node is None:
                 if not a in self.root_node_dict:
                     #perhaps we should allow a variable on the first node.
-                    print "404: no root node: ", a
-                    exit()
+                    body = "404: no root node: %s" % a
+                    code = '404 Not Found'
+                    raise Exception(code, body)
                 else:
                     root_node = self.root_node_dict[a]
                 current_node = root_node
@@ -96,8 +97,9 @@ class DefaultRouter(object):
                     #we didn't find a defined path, let's try variable.
                     if not current_node.varchild:
                         #we didn't find a variable child, path is invalid.
-                        print "404: no child node or var found for :", a
-                        exit()
+                        code = '404 Not Found'
+                        body =  "404: no child node or var found for : %s" % a
+                        raise Exception(code, body)
                     else:
                         current_node = current_node.varchild
                 else:

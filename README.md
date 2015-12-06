@@ -26,7 +26,8 @@ See main.py for an example on how to use this software.
 #Known issues
 Too many to list.
 
-Currently, it doesn't really handle any kind of error situation whatsoever.
+Error handling is very primitive.
 
-Using just the root directory '/' will most likely not work, as you'll end up
-with a blank URL list.  That functionality will have to be hard coded, I guess.
+Need to limit how much post body data we read.
+Need to parse form data that is posted.
+Would be nice to parse the query string for the user.

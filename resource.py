@@ -9,7 +9,7 @@ class DefaultResource(object):
            ideally initialized at the time of calling the app.  This allows us
            to access long-lived DB or Cache sessions, or other long lived
            objects and data.'''
-           
+
         self.req = req
         self.resp = resp
         self.user_objects = user_objects

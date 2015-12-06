@@ -26,6 +26,7 @@ class DefaultRouter(object):
     def __init__(self):
         self.root_node_dict = {}
 
+
     def parse_path(self, uri):
         '''Splits our path into sections using '/' as the separator.
            If the path = '/', then we map '/'.  Otherwise, we trim off the first
@@ -82,11 +83,16 @@ class DefaultRouter(object):
     def return_path_resource(self,uri,var_dict):
         '''Takes in a string path, and parses it.  It uses the parsed path to
            determine what resource to call.  Raises a 404 exception if a mappped
-           resource is not found.'''
+           resource is not found.
+
+           Also takes in var_dict.  var_dict is an existing dictionary to place
+           values of parts of the url that are variables.'''
+
+
         current_node = None
         root_node = None
-        #print uri
         url = self.parse_path(uri)
+
         while url:
             a = url.pop()
 
@@ -98,6 +104,7 @@ class DefaultRouter(object):
                     raise Exception(code, body)
                 else:
                     root_node = self.root_node_dict[a]
+
                 current_node = root_node
 
             else:
@@ -120,4 +127,6 @@ class DefaultRouter(object):
         try:
             return current_node.resource
         except:
-            return None
+            body = "404: no root node: %s" % a
+            code = '404 Not Found'
+            raise Exception(code, body)

@@ -80,7 +80,7 @@ class Request(object):
         self.posted_body = None
         self.path = env['PATH_INFO']
         self.url_vars = {}
-        self.read_post_body()
+        #self.read_post_body()
         if 'HTTP_COOKIE' in env:
             self.cookies = env['HTTP_COOKIE']
         else:
@@ -104,22 +104,28 @@ class App(object):
         self.router = routing.DefaultRouter()
         self.secret_key = secret_key
         self.user_objects = user_objects
+        self.hard_coded_path = {}
+        if not self.secret_key:
+            raise Exception('secret key missing')
+
+    def add_hard_coded_path(self,uri,resource):
+        '''Add a hard coded path to the application.  You cannot use variables
+           here, but the look up time will be faster than normal.'''
+
+        self.hard_coded_path[uri] = resource
 
     def __call__(self, env, start_response):
         '''This method is called by the WSGI server.'''
 
         try:
-            if not self.secret_key:
-                print "secret_key not set, exiting"
-                code = '500 Server Error'
-                body = 'secret_key not set, exiting'
-                raise Exception(code, body)
             req = Request(env)
             resp = Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
 
-            controller = self.router.return_path_resource(
-                            req.path,req.url_vars)(req,resp,user_objects=self.user_objects)
-            controller()
+            try:
+                self.hard_coded_path[req.path](req,resp,user_objects=self.user_objects)()
+            except:
+                self.router.return_path_resource(
+                    req.path,req.url_vars)(req,resp,user_objects=self.user_objects)()
         except Exception as ex:
             code,body = ex.args
             if not code or not body:

@@ -1,8 +1,9 @@
-import app
-import resource
+import pylw.resource
+import pylw.app as app
+
 import json
 
-class HelloWorld(resource.DefaultResource):
+class HelloWorld(pylw.resource.DefaultResource):
 
     def on_get(self):
         #cookies = self.resp.get_cookies()
@@ -22,7 +23,7 @@ class HelloWorld(resource.DefaultResource):
         self.resp.body = 'post method %s ' % bodys
         self.resp.add_header('Content-Type','application/json')
 
-class HelloNobody(resource.DefaultResource):
+class HelloNobody(pylw.resource.DefaultResource):
 
     def on_get(self):
         cookies = self.req.get_cookies()
@@ -31,7 +32,7 @@ class HelloNobody(resource.DefaultResource):
         #self.resp.add_cookie('testk','value1')
         self.resp.add_header('Content-Type','application/json')
 
-class RootResource(resource.DefaultResource):
+class RootResource(pylw.resource.DefaultResource):
 
     def on_get(self):
         self.resp.status = '200 OK'
@@ -39,7 +40,7 @@ class RootResource(resource.DefaultResource):
         #self.resp.add_cookie('testk','value1')
         self.resp.add_header('Content-Type','text/html')
 
-class RootHardResource(resource.DefaultResource):
+class RootHardResource(pylw.resource.DefaultResource):
 
     def on_get(self):
         self.resp.status = '200 OK'
@@ -63,8 +64,8 @@ myapp.router.add_path('/',RootResource)
 #myapp.add_hard_coded_path('/',RootHardResource)
 
 #adding a root variable is not supported.
-myapp.router.add_path('/{rootvar}',HelloWorld)
-myapp.router.add_path('/favicon.ico',HelloNobody)
+#myapp.router.add_path('/{rootvar}',HelloWorld)
+#myapp.router.add_path('/favicon.ico',HelloNobody)
 
 from wsgiref import simple_server
 

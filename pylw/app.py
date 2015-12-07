@@ -4,6 +4,7 @@
 import routing
 import itsdangerous
 import Cookie
+import urlparse
 
 class Response(object):
     '''Response object for sending back to WSGI server.  It holds the headers
@@ -80,6 +81,7 @@ class Request(object):
         self.posted_body = None
         self.path = env['PATH_INFO']
         self.url_vars = {}
+        self.query_dict = urlparse.parse_qs(env['QUERY_STRING'],keep_blank_values=True)
         #self.read_post_body()
         if 'HTTP_COOKIE' in env:
             self.cookies = env['HTTP_COOKIE']

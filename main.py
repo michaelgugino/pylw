@@ -36,7 +36,7 @@ class RootResource(pylw.resource.DefaultResource):
 
     def on_get(self):
         self.resp.status = '200 OK'
-        self.resp.body = 'this is home'
+        self.resp.body = 'this is home' + json.dumps(self.req.query_dict)
         #self.resp.add_cookie('testk','value1')
         self.resp.add_header('Content-Type','text/html')
 

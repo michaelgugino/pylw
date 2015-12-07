@@ -5,7 +5,7 @@ This is intended to be a simple web framework that I will be reusing for other
 projects.  This is not a CMS, but I will be building some kind of blogging/CMS
 on top of this software.
 
-It supports WSGI.  Unlike some frameworks, WSGI is the primary interface.
+It supports WSGI.  Unlike some frameworks, WSGI is the primary interface here.
 
 This code borrows ideas and examples from other places, such as falconframework.
 I recommend you check out that framework as it's probably better than this one,

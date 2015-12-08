@@ -1,12 +1,6 @@
 conf/*
 *.pyc
-build/*
-dist/*
-pylw.egg-info/*
 .Python
 .tox/*
-bin/*
-include/*
-lib/*
-pip-selfcheck.json
 .cache/*
+tests/.coverage

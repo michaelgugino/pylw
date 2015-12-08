@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = pylw
+omit = pylw/tests*,pylw/util*
+[report]
+fail_under = 00

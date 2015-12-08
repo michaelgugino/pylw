@@ -1,6 +1,9 @@
 # pylw
 Python Lightweight Web framework
 
+#Build Status
+[![Build Status](https://travis-ci.org/michaelgugino/pylw.svg?branch=master)](https://travis-ci.org/michaelgugino/pylw)
+
 This is intended to be a simple web framework that I will be reusing for other
 projects.  This is not a CMS, but I will be building some kind of blogging/CMS
 on top of this software.

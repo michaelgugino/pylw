@@ -12,10 +12,7 @@ class Node(object):
         self.name = name
         self.varchild = None
 
-    def add_child(self, child=None, node=None):
-        self.children[child] = node
-
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return self.name
 
 class DefaultRouter(object):
@@ -61,7 +58,7 @@ class DefaultRouter(object):
 
                 current_node = root_node
 
-            elif current_node is not None:
+            else: #current_node is not None:
                 if '}' not in a:
                     if not a in current_node.children:
                         new_node = Node(name=a)
@@ -92,41 +89,33 @@ class DefaultRouter(object):
         current_node = None
         root_node = None
         url = self.parse_path(uri)
-
-        while url:
-            a = url.pop()
-
-            if root_node is None:
-                if not a in self.root_node_dict:
-                    #perhaps we should allow a variable on the first node.
-                    body = "404: no root node: %s" % a
-                    code = '404 Not Found'
-                    raise Exception(code, body)
-                else:
-                    root_node = self.root_node_dict[a]
-
-                current_node = root_node
-
-            else:
-
-                if not a in current_node.children:
-                    #we didn't find a defined path, let's try variable.
-                    if not current_node.varchild:
-                        #we didn't find a variable child, path is invalid.
-                        code = '404 Not Found'
-                        body =  "404: no child node or var found for : %s" % a
-                        raise Exception(code, body)
-                    else:
-                        current_node = current_node.varchild
-                else:
-                    current_node = current_node.children[a]
-
-            if current_node.isvar is True:
-                var_dict[current_node.name] = a
-
         try:
+            while url:
+                a = url.pop()
+
+                if root_node is None:
+                    if not a in self.root_node_dict:
+                        #perhaps we should allow a variable on the first node.
+                        print "404: no root node: %s" % a
+                        raise Exception()
+                    else:
+                        root_node = self.root_node_dict[a]
+
+                    current_node = root_node
+
+                else:
+
+                    if not a in current_node.children:
+                        #we didn't find a defined path, let's try varchild.
+                            current_node = current_node.varchild
+                    else:
+                        current_node = current_node.children[a]
+
+                if current_node.isvar is True:
+                    var_dict[current_node.name] = a
+
             return current_node.resource
         except:
-            body = "404: no root node: %s" % a
+            body = "404: no path found for: %s" % uri
             code = '404 Not Found'
             raise Exception(code, body)

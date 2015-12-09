@@ -60,7 +60,7 @@ def test_no_key():
 
 def test_raise_404(tapp):
     getenv = setup_test_objects.EnvInput('GET','/bad/path')
-    assert tapp(getenv.env,start_response) == '404: no root node: bad'
+    assert tapp(getenv.env,start_response) == '404: no path found for: /bad/path'
 
 def test_bad_resource(tapp):
     tapp.router.add_path('/badresource',setup_test_objects.BadResource())

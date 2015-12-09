@@ -27,7 +27,6 @@ class App(object):
         try:
             req = request.Request(env)
             resp = response.Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
-            print req.raw_env['PATH_INFO']
             try:
                 self.hard_coded_path[req.path](req,resp,user_objects=self.user_objects)
             except:
@@ -39,12 +38,12 @@ class App(object):
             try:
                 code,body = ex.args
             except:
-                pass
-            if not code or not body:
-                code = '500 Server Error'
-                body = 'Unhandled App Exception'
+                if not code or not body: # pragma: no cover
+                    code = '500 Server Error'
+                    body = 'Unhandled App Exception'
             header_dict = {'Content-Length' : str(len(body))}
             start_response(code, header_dict.items())
             return body
+
         start_response(resp.status, resp.get_headers())
         return resp.body

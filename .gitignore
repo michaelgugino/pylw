@@ -4,3 +4,5 @@ conf/*
 .tox/*
 .cache/*
 tests/.coverage
+.coverage
+pylw.egg-info/*

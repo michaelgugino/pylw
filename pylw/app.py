@@ -122,14 +122,19 @@ class App(object):
         try:
             req = Request(env)
             resp = Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
-
+            print req.raw_env['PATH_INFO']
             try:
                 self.hard_coded_path[req.path](req,resp,user_objects=self.user_objects)()
             except:
                 self.router.return_path_resource(
                     req.path,req.url_vars)(req,resp,user_objects=self.user_objects)()
         except Exception as ex:
-            code,body = ex.args
+            code = None
+            body = None
+            try:
+                code,body = ex.args
+            except:
+                pass
             if not code or not body:
                 code = '500 Server Error'
                 body = 'Unhandled App Exception'

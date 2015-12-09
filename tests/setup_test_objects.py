@@ -29,7 +29,7 @@ test_get_env = {
 
 class EnvInput(object):
 
-    def __init__(self, type):
+    def __init__(self, type, path):
         if type == 'POST':
             self.test_input_buff = cStringIO.StringIO(json.dumps(body_dict))
 
@@ -38,7 +38,8 @@ class EnvInput(object):
                 'CONTENT_LENGTH' : str(len(self.test_input_buff.getvalue())),
                 'HTTP_COOKIE' : 'cookie1=value1;',
                 'QUERY_STRING' : '?x=1&y=2',
-                'REQUEST_METHOD' : type
+                'REQUEST_METHOD' : type,
+                'PATH_INFO' : path
             }
 
         elif type == 'GET':
@@ -48,14 +49,29 @@ class EnvInput(object):
                 'CONTENT_LENGTH' : str(len(self.test_input_buff.getvalue())),
                 'HTTP_COOKIE' : 'cookie1=value1;',
                 'QUERY_STRING' : '?x=1&y=2',
-                'REQUEST_METHOD' : type
+                'REQUEST_METHOD' : type,
+                'PATH_INFO' : path
             }
 
-class TestResource(pylw.resource.DefaultResource):
+class TestHomeResource(pylw.resource.DefaultResource):
     def on_get(self):
         self.resp.status = '200 OK'
         self.resp.body = 'this is hard coded home'
         #self.resp.add_cookie('testk','value1')
         self.resp.add_header('Content-Type','text/html')
+
+    def on_post(self):
+        self.resp.status = '200 OK'
+        self.resp.body = 'this is hard coded post home'
+        #self.resp.add_cookie('testk','value1')
+        self.resp.add_header('Content-Type','text/html')
+
+class TestVarResource(pylw.resource.DefaultResource):
+    def on_get(self):
+        self.resp.status = '200 OK'
+        self.resp.body = json.dumps(self.req.url_vars)
+        #self.resp.add_cookie('testk','value1')
+        self.resp.add_header('Content-Type','text/html')
+
 
 #test_app = pylw.app.App(secret_key="my-new-secret-key")

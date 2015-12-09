@@ -4,3 +4,4 @@ source = pylw
 omit = pylw/tests*,pylw/util*
 [report]
 fail_under = 00
+show_missing = True

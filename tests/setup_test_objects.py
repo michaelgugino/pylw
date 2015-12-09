@@ -3,12 +3,9 @@ import pylw.app, pylw.resource
 import cStringIO
 import json
 
-body_dict = {
-'var1' : 'value 1',
-'var2' : 'value 2'
-}
+body = '{"var1" : "value 1"}'
 
-test_input_buff = cStringIO.StringIO(json.dumps(body_dict))
+test_input_buff = cStringIO.StringIO(body)
 
 
 test_post_env = {
@@ -31,7 +28,7 @@ class EnvInput(object):
 
     def __init__(self, type, path):
         if type == 'POST':
-            self.test_input_buff = cStringIO.StringIO(json.dumps(body_dict))
+            self.test_input_buff = cStringIO.StringIO(body)
 
             self.env = {
                 'wsgi.input' : self.test_input_buff,

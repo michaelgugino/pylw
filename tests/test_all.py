@@ -4,33 +4,36 @@ import setup_test_objects
 import pylw
 import pylw.app
 
-
-def create_app():
+@pytest.fixture(scope="module")
+def tapp():
     return pylw.app.App(secret_key="my-new-secret-key")
 
-def app_add_hard_route(app):
-    app.add_hard_coded_path('/',setup_test_objects.TestHomeResource)
+def app_add_hard_route(tapp):
+    tapp.add_hard_coded_path('/',setup_test_objects.TestHomeResource())
 
 def start_response(*args):
     pass
 
-def test_all():
-    print 'creating app'
+def test_create_app(tapp):
+    assert type(tapp) == pylw.app.App
 
-    app = create_app()
-    assert type(app) == pylw.app.App
+def test_add_hard_route(tapp):
+    app_add_hard_route(tapp)
+    assert type(tapp.hard_coded_path['/']) == setup_test_objects.TestHomeResource
 
-    app_add_hard_route(app)
-    assert app.hard_coded_path['/'] == setup_test_objects.TestHomeResource
 
+def test_get_env(tapp):
     getenv = setup_test_objects.EnvInput('GET','/')
-    assert app(getenv.env,start_response) == 'this is hard coded home'
+    assert tapp(getenv.env,start_response) == 'this is hard coded home'
 
+def test_post_env(tapp):
     postenv = setup_test_objects.EnvInput('POST','/')
-    assert app(postenv.env,start_response) == 'this is hard coded post home'
+    assert tapp(postenv.env,start_response) == 'this is hard coded post home'
 
-    app.router.add_path('/testing/v1/{var1}',setup_test_objects.TestVarResource)
-    assert app.router.root_node_dict['testing'].children['v1'].varchild.isvar
+def test_add_route_var(tapp):
+    tapp.router.add_path('/testing/v1/{var1}',setup_test_objects.TestVarResource())
+    assert tapp.router.root_node_dict['testing'].children['v1'].varchild.isvar
 
+def test_url_vars(tapp):
     varenv = setup_test_objects.EnvInput('GET','/testing/v1/testing')
-    assert app(varenv.env,start_response) == '{"{var1}": "testing"}'
+    assert tapp(varenv.env,start_response) == '{"{var1}": "testing"}'

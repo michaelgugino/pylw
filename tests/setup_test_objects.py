@@ -73,5 +73,12 @@ class TestVarResource(pylw.resource.DefaultResource):
         #resp.add_cookie('testk','value1')
         resp.add_header('Content-Type','text/html')
 
+class BadResource(pylw.resource.DefaultResource):
+    def on_get(self,req,resp,user_objects=None):
+        resp.status = '200 OK'
+        resp.body = json.dumps(nonexisten_var)
+        #resp.add_cookie('testk','value1')
+        resp.add_header('Content-Type','text/html')
+
 
 #test_app = pylw.app.App(secret_key="my-new-secret-key")

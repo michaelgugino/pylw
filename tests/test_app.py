@@ -3,14 +3,12 @@ import pytest
 import setup_test_objects
 import pylw
 import pylw.app
-import pylw.routing
+
+
 @pytest.fixture(scope="module")
 def tapp():
     return pylw.app.App(secret_key="my-new-secret-key")
 
-@pytest.fixture(scope="module")
-def trouter():
-    return pylw.routing.DefaultRouter()
 
 def app_add_hard_route(tapp):
     tapp.add_hard_coded_path('/home',setup_test_objects.TestHomeResource())
@@ -68,9 +66,3 @@ def test_bad_resource(tapp):
     tapp.router.add_path('/badresource',setup_test_objects.BadResource())
     getenv = setup_test_objects.EnvInput('GET','/badresource')
     assert tapp(getenv.env,start_response) == 'Unhandled App Exception'
-
-def test_router_404(trouter):
-    with pytest.raises(Exception):
-        uri = '/not/implemented'
-        vardict = dict()
-        a = trouter.return_path_resource(uri,var_dict)()

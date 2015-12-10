@@ -6,3 +6,5 @@ conf/*
 tests/.coverage
 .coverage
 pylw.egg-info/*
+*.so
+build/*

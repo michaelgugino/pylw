@@ -58,15 +58,6 @@ def test_no_key():
     with pytest.raises(Exception):
         a = pylw.app.App()
 
-def test_raise_404(tapp):
-    getenv = setup_test_objects.EnvInput('GET','/bad/path')
-    assert tapp(getenv.env,start_response) == '404: no path found for: /bad/path'
-
-def test_bad_resource(tapp):
-    tapp.router.add_path('/badresource',setup_test_objects.BadResource())
-    getenv = setup_test_objects.EnvInput('GET','/badresource')
-    assert tapp(getenv.env,start_response) == 'Unhandled App Exception'
-
 def test_config_dict():
     config_dict = {'secret_key' : 'config_dict_secret_key'}
     a = pylw.app.App(secret_key="my-new-secret-key",config_dict=config_dict)

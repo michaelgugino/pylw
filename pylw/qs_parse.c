@@ -17,7 +17,7 @@ say_hello(PyObject* self, PyObject* args)
 static PyObject*
 parse_qs(PyObject* self, PyObject* args)
 {
-  const char* qs;
+  PyStringObject* qs;
   const char *a[2];
   char **ta;
   char *token;

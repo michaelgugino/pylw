@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import pylw
-#import things
+import things
 import timeit
 import gc
 import pylw.app
 import pylw.resource
-#import falcon
+import falcon
 import sys
 import json
 path1 = '/things/to/long/path/test'
@@ -53,7 +53,7 @@ class HelloWorld(pylw.resource.DefaultResource):
 
 
 def start_response(*args):
-    print args
+#    print args
     pass
 
 #a = pylw.app.App(secret_key='test')
@@ -61,7 +61,7 @@ def start_response(*args):
 a = pylw.app.App(secret_key='test')
 a.router.add_path(path2,HelloWorld())
 a.add_hard_coded_path(path1,HelloWorld())
-#b = things.app
+b = things.app
 
 gc.collect()
 
@@ -70,7 +70,7 @@ def runa():
 
 
 def runb():
-        a(env, start_response)
+        b(env, start_response)
 
 print 'pylw'
 sum1 = 0

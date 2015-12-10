@@ -17,25 +17,25 @@ say_hello(PyObject* self, PyObject* args)
 static PyObject*
 parse_qs(PyObject* self, PyObject* args)
 {
-  PyStringObject* qs;
-  const char *a[2];
-  char **ta;
+  char *qs;
+  char *localqs;
   char *token;
   char *tokena;
-  char *tokenb;
-  a[0] = "blah";
-  a[1] = "hmm";
+
+
+
   if (!PyArg_ParseTuple(args, "s", &qs))
       return NULL;
-
+  localqs = strdup(qs);
   PyDictObject *d = PyDict_New();
+
   /*
     for (int i = 0; i < 2; i++) {
       PyDict_SetItem(d, PyString_FromString(a[i]), PyString_FromString(a[i]));
     }
     */
-    int count = 0;
-    while ((token = strsep(&qs, "&")) != NULL) {
+
+    while ((token = strsep(&localqs, "&")) != NULL) {
       //for (ta = token; (*ta = strsep(&token, "=")) != NULL;)
           //tokenb = strsep(&token, "=");
           //tokena = token;
@@ -50,7 +50,7 @@ parse_qs(PyObject* self, PyObject* args)
 
     }
 
-
+    free(localqs);
     //PyDict_SetItem(d, PyString_FromString("var1"), PyString_FromString("val1"));
     return d;
 }

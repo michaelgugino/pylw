@@ -4,6 +4,7 @@
 import Cookie
 import urlparse
 import pylw.qs_parse
+from ctypes import *
 
 class Request(object):
     '''An object that holds request values'''

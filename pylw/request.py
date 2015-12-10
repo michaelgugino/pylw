@@ -21,12 +21,15 @@ class Request(object):
         else:
             self.cookies = None
 
-    def read_post_body(self):
-        #this is probably unsafe and we should limit how much we read.
-        '''Read the body of the POST request'''
+    def read_post_body(self, max_read=4096):
+        '''Read the body of the POST request, default max of 4096 bytes'''
         if self.request_method == 'POST':
             stream = self.raw_env['wsgi.input']
-            self.posted_body = stream.read(int(self.raw_env['CONTENT_LENGTH']))
+            blen = int(self.raw_env['CONTENT_LENGTH'])
+            if blen > max_read:
+                blen = max_read
+            self.posted_body = stream.read(blen)
+            stream.close()
 
     def get_cookies(self):
         '''return self.cookies'''

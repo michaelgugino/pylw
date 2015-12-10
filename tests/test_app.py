@@ -66,3 +66,8 @@ def test_bad_resource(tapp):
     tapp.router.add_path('/badresource',setup_test_objects.BadResource())
     getenv = setup_test_objects.EnvInput('GET','/badresource')
     assert tapp(getenv.env,start_response) == 'Unhandled App Exception'
+
+def test_config_dict():
+    config_dict = {'secret_key' : 'config_dict_secret_key'}
+    a = pylw.app.App(secret_key="my-new-secret-key",config_dict=config_dict)
+    assert a.secret_key == 'config_dict_secret_key'

@@ -1,7 +1,9 @@
 from setuptools import setup
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 from setuptools.command.test import test as TestCommand
 import sys
+
+module1 = Extension('pylw.qs_parse', sources = ['pylw/qs_parse.c'])
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -24,4 +26,5 @@ setup(name='pylw',
       cmdclass={'test': PyTest},
       license='GPLv3',
       packages=['pylw'],
+      ext_modules = [module1],
       zip_safe=False)

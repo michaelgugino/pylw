@@ -11,6 +11,7 @@ class HelloWorld(pylw.resource.DefaultResource):
         signed_cookies = resp.get_signed_cookie('testk')
         #unsigned_cookies = resp.get_cookie('unsigned_testk') or 'none'
         resp.status = '200 OK'
+        print req.query_dict
         resp.body = 'get method  %s' % json.dumps(signed_cookies)
         resp.add_signed_cookie('testk','value1')
         resp.add_cookie('unsigned_testk','value1')

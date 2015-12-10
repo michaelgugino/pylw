@@ -12,7 +12,7 @@ test_post_env = {
     'wsgi.input' : test_input_buff,
     'CONTENT_LENGTH' : str(len(test_input_buff.getvalue())),
     'HTTP_COOKIE' : 'cookie1=value1;',
-    'QUERY_STRING' : '?x=1&y=2',
+    'QUERY_STRING' : 'x=1&y=2',
     'REQUEST_METHOD' : 'POST'
 }
 
@@ -20,7 +20,7 @@ test_get_env = {
     'wsgi.input' : '',
     'CONTENT_LENGTH' : '0',
     'HTTP_COOKIE' : 'cookie1=value1;',
-    'QUERY_STRING' : '?x=1&y=2',
+    'QUERY_STRING' : 'x=1&y=2',
     'REQUEST_METHOD' : 'GET'
 }
 
@@ -34,7 +34,7 @@ class EnvInput(object):
                 'wsgi.input' : self.test_input_buff,
                 'CONTENT_LENGTH' : str(len(self.test_input_buff.getvalue())),
                 'HTTP_COOKIE' : 'cookie1=value1;',
-                'QUERY_STRING' : '?x=1&y=2',
+                'QUERY_STRING' : str(u'x=1&y=2'),
                 'REQUEST_METHOD' : type,
                 'PATH_INFO' : path
             }
@@ -45,7 +45,7 @@ class EnvInput(object):
                 'wsgi.input' : self.test_input_buff,
                 'CONTENT_LENGTH' : str(len(self.test_input_buff.getvalue())),
                 'HTTP_COOKIE' : 'cookie1=value1;',
-                'QUERY_STRING' : '?x=1&y=2',
+                'QUERY_STRING' : str(u'x=1&y=2'),
                 'REQUEST_METHOD' : type,
                 'PATH_INFO' : path
             }

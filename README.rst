@@ -4,7 +4,7 @@ Python Lightweight Webframework.
 
 Usage
 ~~~~~~~
-Please see main.py on _GitHub for usage details.
+Please see main.py on GitHub_ for usage details.
 
 |Build Status|
 

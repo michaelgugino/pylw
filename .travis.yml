@@ -3,16 +3,16 @@ matrix:
   include:
     - python: "2.7"
       env: TEST_SUITE=suite_2_7
-      TOX_ENV=py27
+      TOX_ENV: py27
     - python: "2.6"
       env: TEST_SUITE=suite_2_6
-      TOX_ENV=py26
+      TOX_ENV: py26
     - python: "cython2.7"
       env: TEST_SUITE=suite_2_7
-      TOX_ENV=cy27
+      TOX_ENV: cy27
     - python: "cython2.6"
       env: TEST_SUITE=suite_2_6
-      TOX_ENV=cy26
+      TOX_ENV: cy26
 
 install: "pip install tox coveralls --use-mirrors"
 script: tox

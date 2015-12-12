@@ -11,4 +11,6 @@ matrix:
           env: TOX_ENV=cy26
 
 install: "pip install tox coveralls --use-mirrors"
-script: tox
+script:
+  - "rm -Rf .tox"
+  - tox

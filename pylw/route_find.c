@@ -126,10 +126,11 @@ find_route(PyObject* self, PyObject* args)
   temp_node = NULL;
   temp_node2 = NULL;
   myfun = NULL;
+  Py_ssize_t i;
   if (!PyArg_ParseTuple(args, "OOO", &url_list, &root_dict, &var_dict))
       return NULL;
 
-  for (Py_ssize_t i = 0; i < PyList_Size(url_list); i++) {
+  for (i = 0; i < PyList_Size(url_list); i++) {
       listitem = PyList_GET_ITEM(url_list, i);
       listitems = PyString_AsString(listitem);
       //printf("\n\nlistitems: %s", listitems);

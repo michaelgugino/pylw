@@ -16,6 +16,7 @@
 
 '''pylw.app.  Contains Resp,Req,App object definitions.
    pylw.app.App() is the WSGI callable object.'''
+import itsdangerous
 
 import routing
 import request
@@ -25,12 +26,12 @@ class App(object):
     '''This class implements a bare minimum WSGI application'''
     def __init__(self, secret_key=None, config_dict=None, user_objects=None):
         self.router = routing.DefaultRouter()
-        self.secret_key = secret_key
         self.user_objects = user_objects
         self.hard_coded_path = {}
+        self.s = self.create_secret_signer(secret_key=secret_key)
         if config_dict:
             self.parse_config_dict(config_dict)
-        if not self.secret_key:
+        if not secret_key:
             raise Exception('secret key missing')
 
     def parse_config_dict(self, config_dict):
@@ -38,10 +39,13 @@ class App(object):
         for k,v in config_dict.iteritems():
             self.__dict__[k] = config_dict[k]
 
+    def create_secret_signer(self,secret_key=None):
+        '''Create our secret signer object'''
+        return itsdangerous.Serializer(secret_key)
 
     def add_hard_coded_path(self,uri,resource):
         '''Add a hard coded path to the application.  You cannot use variables
-           here, but the look up time will be faster than normal.'''
+           here, but the look up time will be much faster than normal.'''
 
         self.hard_coded_path[uri] = resource
 
@@ -50,7 +54,9 @@ class App(object):
 
 
         req = request.Request(env)
-        resp = response.Response(secret_key=self.secret_key, http_cookies=req.get_cookies())
+        resp = response.Response(
+            http_cookies=req.get_cookies(),
+            signer=self.s)
         try:
             self.hard_coded_path[req.path](req,resp,user_objects=self.user_objects)
         except:

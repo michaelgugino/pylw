@@ -17,19 +17,18 @@
 '''pylw.response.  Contains Response object definition.  Holds body, header,
    and parses/signs cookies.'''
 
-import itsdangerous
 import Cookie
 
 class Response(object):
     '''Response object for sending back to WSGI server.  It holds the headers
        and body'''
 
-    def __init__(self, secret_key=None, http_cookies=None):
+    def __init__(self, http_cookies=None, signer=None):
         '''Initialize our object.'''
         self.__header_dict = {}
         self.body = None
         self.status = None
-        self.s = self.create_secret_signer(secret_key=secret_key)
+        self.s = signer
         self.__cookies = self.parse_http_cookies(http_cookies)
 
     def parse_http_cookies(self, req_cookies):
@@ -38,10 +37,6 @@ class Response(object):
         if req_cookies:
             C.load(req_cookies)
         return C
-
-    def create_secret_signer(self,secret_key=None):
-        '''Create our secret signer object'''
-        return itsdangerous.Serializer(secret_key)
 
     def get_headers(self):
         '''Returns headers in a list of tuples that is usable by WSGI'''

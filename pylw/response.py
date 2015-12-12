@@ -38,6 +38,10 @@ class Response(object):
             C.load(req_cookies)
         return C
 
+    def HTTP404Error(self):
+        self.status = '404 Not Found'
+        self.body = 'The requested URL was not found.'
+
     def get_headers(self):
         '''Returns headers in a list of tuples that is usable by WSGI'''
         if not self.body:

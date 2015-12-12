@@ -60,8 +60,11 @@ class App(object):
         try:
             self.hard_coded_path[req.path](req,resp,user_objects=self.user_objects)
         except:
-            self.router.return_path_resource(
-                req.path,req.url_vars)(req,resp,user_objects=self.user_objects)
+            try:
+                self.router.return_path_resource(
+                    req.path,req.url_vars)(req,resp,user_objects=self.user_objects)
+            except:
+                resp.HTTP404Error()
 
         start_response(resp.status, resp.get_headers())
         return resp.body

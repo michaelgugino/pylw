@@ -34,7 +34,7 @@ class PyTest(TestCommand):
 setup(name='pylw',
       version='0.1',
       description='The Python Lightweight Web Framework',
-      long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
+      #long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Web Environment',

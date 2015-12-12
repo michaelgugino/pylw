@@ -1,12 +1,10 @@
 pylw
-======
+====
 Python Lightweight Webframework.
 
 Usage
-~~~~~~~
-Please see main.py on GitHub_ for usage details.
-
-|Build Status|
+~~~~~
+Please see main.py on github.com for usage.
 
 This is a somewhat useful web framework.
 
@@ -15,7 +13,7 @@ It's meant to be fast, and to do very little.
 It works with WSGI servers.
 
 Features
-~~~~~~~~~~
+~~~~~~~~
 URL Routing, Cookies, Cookie signing (with itsdangerous), Allows headers to be
 easily added, adds cookies and content length to headers automatically when
 the response is returned.
@@ -23,14 +21,14 @@ the response is returned.
 No template engine is supplied, no ORM, no 'session' handling.  That's up to the
 dev.  This framework handles the most basic of tasks.
 
-Unicode support...none.
-~~~~~~~~~~~~
+Unicode Support
+~~~~~~~~~~~~~~~
 We also don't support python3 at this time.  Unicode may or may not work for
 you, I honestly don't know.  If it doesn't impact performance much, it might be
 added in the future.
 
 Complexity...zero.
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Some C code has been included to speed up query parsing and URL routing.
 
@@ -42,13 +40,7 @@ crash the software or cause problems, but they will just appear as-is instead
 of decoded.
 
 Cython support
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 If you have Cython installed, this package will compile modules into C code.
 This improves performance greatly, especially when using CRouter for URL
 routing.
-
-
-.. |Build Status| image:: https://travis-ci.org/michaelgugino/pylw.svg?branch=master
-   :target: https://travis-ci.org/michaelgugino/pylw
-
-.. _GitHub: https://github.com/michaelgugino/pylw

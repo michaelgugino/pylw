@@ -51,5 +51,4 @@ routing.
 .. |Build Status| image:: https://travis-ci.org/michaelgugino/pylw.svg?branch=master
    :target: https://travis-ci.org/michaelgugino/pylw
 
-.. |Git Hub| https://travis-ci.org/michaelgugino/pylw.svg?branch=master
-      :target: https://travis-ci.org/michaelgugino/pylw
+.. _GitHub: https://github.com/michaelgugino/pylw

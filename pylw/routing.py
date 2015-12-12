@@ -1,5 +1,21 @@
-'''Adding routes to your project is easy'''
+#!/usr/bin/env python
 
+# Copyright 2015 Michael Gugino
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+'''Adding routes to your project is easy'''
+import pylw.route_find
 class Node(object):
     '''Implements basic class for url nodes.  These nodes contain child nodes,
        variable child nodes, and/or functions.  This allows us to walk through
@@ -13,6 +29,18 @@ class Node(object):
         self.varchild = None
 
     def __repr__(self): # pragma: no cover
+        return self.name
+
+    def get_children(self):
+        return self.children
+
+    def get_varchild(self):
+        return self.varchild
+
+    def get_resource(self):
+        return self.resource
+
+    def get_name(self):
         return self.name
 
 class DefaultRouter(object):
@@ -119,3 +147,27 @@ class DefaultRouter(object):
             body = "404: no path found for: %s" % uri
             code = '404 Not Found'
             raise Exception(code, body)
+
+class CRouter(DefaultRouter):
+
+    def parse_path2(self, uri):
+        '''Splits our path into sections using '/' as the separator.
+           If the path = '/', then we map '/'.  Otherwise, we trim off the first
+           item in the list as it would be blank and nondescriptive.
+
+           The list is not returned in reverse'''
+        if uri == '/':
+            l = [uri]
+        else:
+            l = uri.split('/')
+            if l[0] == '':
+                l = l[1:]
+        #if the last item is blank due to trailing slash, we must trim it or
+        #C will segfault, yay.
+        if l[len(l)-1] == '':
+            l = l[0:len(l)-2]
+        return l
+
+    def return_path_resource(self,uri,var_dict):
+        #url = self.parse_path2(uri)
+        return pylw.route_find.find_route2(uri,self.root_node_dict,var_dict)

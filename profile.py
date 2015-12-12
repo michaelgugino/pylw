@@ -15,43 +15,27 @@
 # limitations under the License.
 
 import pylw
-import timeit
-import gc
 import pylw.app
 import pylw.resource
-
-import sys
-import json
 path1 = '/things/to/long/path/test'
 path2 = '/things/to/long/path/{var1}'
-
-env2 = {
-'REQUEST_METHOD' : 'GET',
-'PATH_INFO' : path1
-}
-
 
 
 
 env = {
     'SERVER_PROTOCOL': 'HTTP 1.1',
-    'SERVER_SOFTWARE': 'gunicorn/0.17.0',
+    'SERVER_SOFTWARE': 'WSGIREF',
     'SCRIPT_NAME': 'app',
     'REQUEST_METHOD': 'GET',
     'PATH_INFO': path1,
     'HTTP_USER_AGENT': 'curl/7.24.0 (x86_64-apple-darwin12.0)',
-    'REMOTE_PORT': '65133',
+    'REMOTE_PORT': '65123',
     'RAW_URI': path1,
     'REMOTE_ADDR': '127.0.0.1',
     'SERVER_NAME': 'localhost',
     'SERVER_PORT': '8000',
     'QUERY_STRING': 'a&=1b=2',
-    'wsgi.url_scheme': '',
-    'wsgi.input': 'some body',
-    'wsgi.errors': sys.stderr,
-    'wsgi.multithread': False,
-    'wsgi.multiprocess': True,
-    'wsgi.run_once': False
+    'wsgi.input': 'some body'
 }
 
 class HelloWorld(pylw.resource.DefaultResource):
@@ -71,38 +55,9 @@ def start_response(*args):
 a = pylw.app.App(secret_key='test')
 a.router.add_path(path2,HelloWorld())
 a.add_hard_coded_path(path1,HelloWorld())
-b = a
-
-gc.collect()
 
 def runa():
         a(env, start_response)
 
-
-def runb():
-        b(env, start_response)
-
-print 'pylw'
-sum1 = 0
-sum1 += timeit.timeit(runa,number=10000)
-sum1 += timeit.timeit(runa,number=10000)
-sum1 += timeit.timeit(runa,number=10000)
-#sum1 += timeit.timeit(runa,number=10)
-
-
-sum2 = 0
-gc.collect()
-sum2 += timeit.timeit(runb,number=10000)
-sum2 += timeit.timeit(runb,number=10000)
-sum2 += timeit.timeit(runb,number=10000)
-#sum2 += timeit.timeit(runb,number=10)
-av1 = sum1/3
-av2 = sum2/3
-
-print 'av1:', av1
-print 'av2:', av2
-
-diff = av1 - av2
-print 'diff:', diff
-print 'diff% :', diff/av1
-#a(env, start_response)
+if __name__ == '__main__':
+    runa()

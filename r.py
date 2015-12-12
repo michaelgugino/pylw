@@ -11,8 +11,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import pylw.routing
 
-import pylw.qs_parse
 
-a = pylw.qs_parse.parse_qs("a=%2E1&b=2")
-print a
+def myfun():
+    print "myfun returned"
+
+def myfun2():
+    print "myfun2 returned"
+
+r = pylw.routing.CRouter()
+
+p = '/'
+p2 = '/root'
+p3 = '/root/child/{var1}'
+p4 = 'root/child/{var1}/{var2}'
+
+r.add_path(p, myfun)
+r.add_path(p2, myfun)
+r.add_path(p3, myfun2)
+r.add_path(p4, myfun)
+var_dict = {}
+
+#a = r.return_path_resource(p,var_dict)
+#a()
+
+b = r.return_path_resource('/root/child/val1//',var_dict)
+b()
+
+c = r.return_path_resource('/root/child/val1/val2',var_dict)
+c()
+
+d = r.return_path_resource('root/child/val1/val2/',var_dict)
+d()
+
+print var_dict

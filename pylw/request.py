@@ -2,7 +2,7 @@
    input from WSGI.'''
 
 import Cookie
-import urlparse
+#import urlparse
 import pylw.qs_parse
 from ctypes import *
 
@@ -16,6 +16,10 @@ class Request(object):
         self.posted_body = None
         self.path = env['PATH_INFO']
         self.url_vars = {}
+
+        #uncomment the next line if you want to use python to parse query string.
+        #This is probably safer than the C method, and it will handle url encoded
+        #strings as well, whereas the c parser will not.
         #self.query_dict = urlparse.parse_qs(env['QUERY_STRING'],keep_blank_values=True)
         if env['QUERY_STRING'] == '':
             self.query_dict = {}

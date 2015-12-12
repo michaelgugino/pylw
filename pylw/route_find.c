@@ -28,6 +28,7 @@ static PyObject*
 find_route2(PyObject* self, PyObject* args) {
   char *url_string;
   char *url_copy;
+  char *freeurl;
   PyDictObject *root_dict;
   PyDictObject *var_dict;
   PyObject *root_node;
@@ -45,7 +46,7 @@ find_route2(PyObject* self, PyObject* args) {
   if (!PyArg_ParseTuple(args, "sOO", &url_string, &root_dict, &var_dict))
       return NULL;
 
-  url_copy = strdup(url_string);
+  freeurl = url_copy = strdup(url_string);
 
   //trim leading '/'
 while (url_copy[0] == '/') {
@@ -102,7 +103,7 @@ while (url_copy[0] == '/') {
 //PyObject* PyDict_GetItem(PyObject *p, PyObject *key)
     //free(localqs);
   //  if (url_copy)
-    //  free(url_copy);
+      free(freeurl);
     if (!myfun) {
       PyErr_SetString(PyExc_RuntimeError, "No resource found");
     }

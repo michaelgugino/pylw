@@ -28,6 +28,8 @@ class App(object):
         self.router = routing.DefaultRouter()
         self.user_objects = user_objects
         self.hard_coded_path = {}
+        self.resp_class = response.Response
+        self.req_class = request.Request
         self.s = self.create_secret_signer(secret_key=secret_key)
         if config_dict:
             self.parse_config_dict(config_dict)
@@ -53,8 +55,8 @@ class App(object):
         '''This method is called by the WSGI server.'''
 
 
-        req = request.Request(env)
-        resp = response.Response(
+        req = self.req_class(env)
+        resp = self.resp_class (
             http_cookies=req.get_cookies(),
             signer=self.s)
         try:

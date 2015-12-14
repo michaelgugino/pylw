@@ -61,6 +61,7 @@ class App(object):
             signer=self.s)
         try:
             self.hard_coded_path[req.path](req,resp,user_objects=self.user_objects)
+            print self.user_objects
         except:
             try:
                 self.router.return_path_resource(

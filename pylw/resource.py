@@ -30,9 +30,9 @@ class DefaultResource(object):
 
     def __call__(self,req,resp,user_objects=None):
         if req.request_method == 'POST':
-            self.on_post(req,resp,user_objects=None)
+            self.on_post(req,resp,user_objects)
         elif req.request_method == 'GET':
-            self.on_get(req,resp,user_objects=None)
+            self.on_get(req,resp,user_objects)
         else:
             resp.status = '400 Bad Method'
             resp.body = 'Method Not Implemented %s ' % json.dumps(req.url_vars)

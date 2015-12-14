@@ -50,7 +50,7 @@ else:
     ext_modules = [module1, module2]
 
 setup(name='pylw',
-      version='0.1.8',
+      version='0.1.9',
       description='The Python Lightweight Web Framework',
       long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
       classifiers=[

@@ -170,4 +170,4 @@ class CRouter(DefaultRouter):
 
     def return_path_resource(self,uri,var_dict):
         #url = self.parse_path2(uri)
-        return pylw.route_find.find_route2(uri,self.root_node_dict,var_dict)
+        return pylw.route_find.find_route(uri,self.root_node_dict,var_dict)

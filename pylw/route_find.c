@@ -25,7 +25,7 @@ char* get_str_part(char* url_string) {
 }
 
 static PyObject*
-find_route2(PyObject* self, PyObject* args) {
+find_route(PyObject* self, PyObject* args) {
   char *url_string;
   char *url_copy;
   char *freeurl;
@@ -47,25 +47,22 @@ find_route2(PyObject* self, PyObject* args) {
       return NULL;
 
   freeurl = url_copy = strdup(url_string);
+  if (url_copy == NULL) {
+    PyErr_SetString(PyExc_RuntimeError, "Unable to malloc");
+    return NULL;
+  }
 
   //trim leading '/'
 while (url_copy[0] == '/') {
-  //  printf("url copy leading slash\n");
     url_copy++;
   }
 
 // trim trailing '/'
   while (url_copy[strlen(url_copy)-1] == '/') {
-      //printf("url copy trailing slash\n");
       url_copy[strlen(url_copy)-1] = 0;
   }
-  //printf("urlcopy: %s\n", url_copy);
-  while ((str_part = strsep(&url_copy, "/")) != NULL) {
-    //  printf("urlcopy: %s\n", url_copy);
-    //  printf("str_part: %s\n", str_part);
 
-      //listitems = PyString_AsString(listitem);
-      //printf("\n\nlistitems: %s", listitems);
+  while ((str_part = strsep(&url_copy, "/")) != NULL) {
       children_dict = NULL;
       temp_node2 = NULL;
       myfun = NULL;
@@ -100,87 +97,17 @@ while (url_copy[0] == '/') {
       }
   }
 
-//PyObject* PyDict_GetItem(PyObject *p, PyObject *key)
-    //free(localqs);
-  //  if (url_copy)
-      free(freeurl);
+    free(freeurl);
     if (!myfun) {
       PyErr_SetString(PyExc_RuntimeError, "No resource found");
     }
     return myfun;
 }
 
-static PyObject*
-find_route(PyObject* self, PyObject* args)
-{
-  PyListObject *url_list;
-  PyDictObject *root_dict;
-  PyDictObject *var_dict;
-  PyObject *root_node;
-  PyObject *temp_node;
-  PyObject *temp_node2;
-  PyObject *children_dict;
-  PyObject *listitem;
-  char *listitems;
-  PyObject *myfun;
-  root_node = NULL;
-  temp_node = NULL;
-  temp_node2 = NULL;
-  myfun = NULL;
-  Py_ssize_t i;
-  if (!PyArg_ParseTuple(args, "OOO", &url_list, &root_dict, &var_dict))
-      return NULL;
-
-  for (i = 0; i < PyList_Size(url_list); i++) {
-      listitem = PyList_GET_ITEM(url_list, i);
-      listitems = PyString_AsString(listitem);
-      //printf("\n\nlistitems: %s", listitems);
-      children_dict = NULL;
-      temp_node2 = NULL;
-      myfun = NULL;
-      if (!root_node) {
-          temp_node = PyDict_GetItem(root_dict, listitem);
-          if (!temp_node)
-            break;
-          root_node = temp_node;
-          myfun = PyObject_CallMethodObjArgs(temp_node, PyString_FromString("get_resource"), NULL );
-      }
-      else {
-          if (temp_node) {
-            children_dict = PyObject_CallMethodObjArgs(temp_node, PyString_FromString("get_children"), NULL );
-            if (children_dict) {
-              temp_node2 = PyDict_GetItem(children_dict, listitem);
-              if (!temp_node2) {
-                temp_node2 = PyObject_CallMethodObjArgs(temp_node, PyString_FromString("get_varchild"), NULL );
-                if (temp_node2) {
-                  PyDict_SetItem(var_dict, PyObject_CallMethodObjArgs(temp_node2, PyString_FromString("get_name"), NULL ), listitem);
-                  temp_node = temp_node2;
-                }
-                else {
-                  myfun = NULL;
-                  break;
-                }
-              }
-              else
-                temp_node = temp_node2;
-            }
-            myfun = PyObject_CallMethodObjArgs(temp_node, PyString_FromString("get_resource"), NULL );
-          }
-      }
-  }
-
-//PyObject* PyDict_GetItem(PyObject *p, PyObject *key)
-    //free(localqs);
-    if (!myfun) {
-      PyErr_SetString(PyExc_RuntimeError, "No resource found");
-    }
-    return myfun;
-}
 
 static PyMethodDef QSMethods[] =
 {
      {"find_route", find_route, METH_VARARGS, "Find a route"},
-     {"find_route2", find_route2, METH_VARARGS, "Find a route"},
      {NULL, NULL, 0, NULL}
 };
 

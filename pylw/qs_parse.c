@@ -21,6 +21,7 @@ parse_qs(PyObject* self, PyObject* args)
 {
   char *qs;
   char *localqs;
+  char *freeqs;
   char *token;
   char *tokena;
 
@@ -28,16 +29,16 @@ parse_qs(PyObject* self, PyObject* args)
 
   if (!PyArg_ParseTuple(args, "s", &qs))
       return NULL;
-  localqs = strdup(qs);
+  freeqs = localqs = strdup(qs);
+  if (localqs == NULL) {
+    PyErr_SetString(PyExc_RuntimeError, "Unable to malloc");
+    return NULL;
+  }
   PyDictObject *d = PyDict_New();
 
     while ((token = strsep(&localqs, "&")) != NULL) {
-      //for (ta = token; (*ta = strsep(&token, "=")) != NULL;)
-          //tokenb = strsep(&token, "=");
-          //tokena = token;
-          //running = strdupa (string);
           tokena = strsep(&token, "=");
-          //tokenb = strsep(&token, "=");
+
           if (token == NULL)
             PyDict_SetItem(d, PyString_FromString(tokena), PyString_FromString(""));
           else {
@@ -46,8 +47,7 @@ parse_qs(PyObject* self, PyObject* args)
 
     }
 
-    free(localqs);
-    //PyDict_SetItem(d, PyString_FromString("var1"), PyString_FromString("val1"));
+    free(freeqs);
     return d;
 }
 

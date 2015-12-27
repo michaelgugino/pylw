@@ -43,8 +43,11 @@ find_route(PyObject* self, PyObject* args) {
   temp_node2 = NULL;
   myfun = NULL;
 
-  if (!PyArg_ParseTuple(args, "sOO", &url_string, &root_dict, &var_dict))
+  if (!PyArg_ParseTuple(args, "sOO", &url_string, &root_dict, &var_dict)) {
+      PyErr_SetString(PyExc_RuntimeError, "Invalid Args");
       return NULL;
+  }
+
 
   freeurl = url_copy = strdup(url_string);
   if (url_copy == NULL) {

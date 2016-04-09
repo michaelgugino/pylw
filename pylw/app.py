@@ -54,16 +54,18 @@ class App(object):
     def __call__(self, env, start_response):
         '''This method is called by the WSGI server.'''
 
-
         req = self.req_class(env)
         resp = self.resp_class (
             http_cookies=req.get_cookies(),
             signer=self.s)
         try:
+            #TODO: unintended 404 error raised if this method fails for a reason
+            #other than being present.
             self.hard_coded_path[req.path](req,resp,user_objects=self.user_objects)
-            print self.user_objects
         except:
             try:
+                #TODO: unintended 404 error raised if this method fails for a reason
+                #other than being present.
                 self.router.return_path_resource(
                     req.path,req.url_vars)(req,resp,user_objects=self.user_objects)
             except:

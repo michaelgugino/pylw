@@ -50,7 +50,7 @@ else:
     ext_modules = [module1, module2]
 
 setup(name='pylw',
-      version='0.1.12',
+      version='0.1.13',
       description='The Python Lightweight Web Framework',
       long_description=io.open('README.rst', 'r', encoding='utf-8').read(),
       classifiers=[
@@ -75,6 +75,7 @@ setup(name='pylw',
       url='http://github.com/michaelgugino/pylw',
       author='Michael Gugino',
       author_email='mike@funwithlinux.net',
+      install_requires=['itsdangerous'],
       tests_require=['pytest'],
       cmdclass=cmdclass,
       license='Apache',
